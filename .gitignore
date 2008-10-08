@@ -2,3 +2,4 @@ Makefile
 rdoc
 subset_sum.o
 subset_sum.so
+*.gem
