@@ -31,7 +31,7 @@ end
 desc "Update docs and upload to rubyforge.org"
 task :doc_rforge => [:rdoc] do
   sh %{chmod -R g+w rdoc/*}
-  sh %{scp -rp rdoc/* rubyforge.org:/var/www/gforge-projects/subset_sum}
+  sh %{scp -rp rdoc/* rubyforge.org:/var/www/gforge-projects/subset-sum}
 end
 
 desc "Package subset_sum"
