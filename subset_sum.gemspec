@@ -5,7 +5,7 @@ spec = Gem::Specification.new do |s|
   s.email = "code@jeremyevans.net"
   s.homepage = "http://subset-sum.rubyforge.org/"
   s.platform = Gem::Platform::RUBY
-  s.summary = "Simple Subset Sum Solver in C"
+  s.summary = "Simple Subset Sum Solver with C and Pure Ruby Versions"
   s.files = %w"LICENSE extconf.rb subset_sum.c subset_sum.rb spec/subset_sum_spec.rb"
   s.require_paths = ["."]
   s.extensions << 'extconf.rb'
