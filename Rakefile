@@ -49,8 +49,8 @@ end
 
 task :speedup => [:build] do
   puts "C Version"
-  sh %{spec/c_speedup.rb}
+  sh %{#{RUBY} spec/c_speedup.rb}
   sh %{rake clean}
   puts "Ruby Version"
-  sh %{spec/c_speedup.rb}
+  sh %{#{RUBY} spec/c_speedup.rb}
 end
