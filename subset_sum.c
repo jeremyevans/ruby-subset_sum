@@ -283,7 +283,7 @@ static VALUE rbss_main(VALUE self, VALUE numbers, VALUE result, VALUE max_second
     
     c_result = NUM2LONG(result);
     c_max_seconds = NUM2INT(max_seconds);
-    length = RARRAY(numbers)->len;
+    length = RARRAY_LEN(numbers);
     half_length = length/2;
     
     if(c_max_seconds < 0) {
