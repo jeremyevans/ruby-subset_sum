@@ -1,5 +1,6 @@
 require 'rake'
 require 'rake/clean'
+require 'rbconfig'
 require "spec/rake/spectask"
 begin
   require "hanna/rdoctask"
@@ -8,6 +9,8 @@ rescue LoadError
 end
 
 CLEAN.include %w"rdoc Makefile subset_sum.o subset_sum.so subset_sum-*.gem"
+RUBY=ENV['RUBY'] || File.join(RbConfig::CONFIG['bindir'], RbConfig::CONFIG['ruby_install_name'])
+ENV['RUBYLIB'] = ".#{File::PATH_SEPARATOR}#{ENV['RUBYLIB']}"
 
 task :default => [:spec]
 task :spec => [:build]
@@ -16,7 +19,7 @@ Spec::Rake::SpecTask.new("spec") do |t|
 end
 
 task :build do
-    sh %{ruby extconf.rb}
+    sh %{#{RUBY} extconf.rb}
     sh %{make}
 end
 
