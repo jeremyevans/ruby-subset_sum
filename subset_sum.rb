@@ -1,3 +1,8 @@
+# ruby-subset_sum implements a subset sum solver for ruby.
+#
+# Homepage: http://ruby-subsetsum.jeremyevans.net
+# Source: https://github.com/jeremyevans/ruby-subset_sum
+
 # This module provides both a C and pure ruby simple subset sum problem solver.
 # The subset sum problem is, given a set of numbers, can the sum of any subset
 # of those numbers equal a given number.  This problem is NP-complete.

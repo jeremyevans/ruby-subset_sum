@@ -3,7 +3,7 @@ spec = Gem::Specification.new do |s|
   s.version = "1.0.1"
   s.author = "Jeremy Evans"
   s.email = "code@jeremyevans.net"
-  s.homepage = "http://subset-sum.rubyforge.org/"
+  s.homepage = "http://ruby-subsetsum.jeremyevans.net/"
   s.platform = Gem::Platform::RUBY
   s.summary = "Simple Subset Sum Solver with C and Pure Ruby Versions"
   s.files = %w"LICENSE extconf.rb subset_sum.c subset_sum.rb spec/subset_sum_spec.rb"
@@ -11,5 +11,4 @@ spec = Gem::Specification.new do |s|
   s.extensions << 'extconf.rb'
   s.test_files = %w"spec/subset_sum_spec.rb"
   s.has_rdoc = true
-  s.rubyforge_project = 'subset-sum'
 end

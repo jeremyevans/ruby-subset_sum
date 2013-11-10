@@ -2,11 +2,6 @@ require 'rake'
 require 'rake/clean'
 require 'rbconfig'
 require "spec/rake/spectask"
-begin
-  require "hanna/rdoctask"
-rescue LoadError
-  require "rake/rdoctask"
-end
 
 CLEAN.include %w"rdoc Makefile subset_sum.o subset_sum.so subset_sum-*.gem"
 RUBY=ENV['RUBY'] || File.join(RbConfig::CONFIG['bindir'], RbConfig::CONFIG['ruby_install_name'])
@@ -19,22 +14,38 @@ Spec::Rake::SpecTask.new("spec") do |t|
 end
 
 task :build do
-    sh %{#{RUBY} extconf.rb}
-    sh %{make}
+  sh %{#{RUBY} extconf.rb}
+  sh %{make}
 end
 
-Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_dir = "rdoc"
-  rdoc.options += ["--quiet", "--line-numbers", "--inline-source"]
-  rdoc.main = "SubsetSum"
-  rdoc.title = "subset_sum: Simple Subset Sum Solver with C and pure ruby versions"
-  rdoc.rdoc_files.add ["subset_sum.rb", "LICENSE"]
+RDOC_OPTS = ["--line-numbers", "--inline-source", '--main', 'README']
+
+begin
+  gem 'rdoc', '= 3.12.2'
+  gem 'hanna-nouveau'
+  RDOC_OPTS.concat(['-f', 'hanna'])
+rescue Gem::LoadError
 end
 
-desc "Update docs and upload to rubyforge.org"
-task :doc_rforge => [:rdoc] do
-  sh %{chmod -R g+w rdoc/*}
-  sh %{scp -rp rdoc/* rubyforge.org:/var/www/gforge-projects/subset-sum}
+rdoc_task_class = begin
+  require "rdoc/task"
+  RDoc::Task
+rescue LoadError
+  begin
+    require "rake/rdoctask"
+    Rake::RDocTask
+  rescue LoadError, StandardError
+  end
+end
+
+if rdoc_task_class
+  rdoc_task_class.new do |rdoc|
+    rdoc.rdoc_dir = "rdoc"
+    rdoc.options += RDOC_OPTS
+    rdoc.main = "subset_sum.rb"
+    rdoc.title = "subset_sum: Simple Subset Sum Solver with C and pure ruby versions"
+    rdoc.rdoc_files.add ["subset_sum.rb", "LICENSE"]
+  end
 end
 
 desc "Package subset_sum"
