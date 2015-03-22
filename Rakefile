@@ -1,21 +1,34 @@
 require 'rake'
 require 'rake/clean'
 require 'rbconfig'
-require "spec/rake/spectask"
 
 CLEAN.include %w"rdoc Makefile subset_sum.o subset_sum.so subset_sum-*.gem"
 RUBY=ENV['RUBY'] || File.join(RbConfig::CONFIG['bindir'], RbConfig::CONFIG['ruby_install_name'])
 ENV['RUBYLIB'] = ".#{File::PATH_SEPARATOR}#{ENV['RUBYLIB']}"
 
-task :default => [:spec]
-task :spec => [:build]
-Spec::Rake::SpecTask.new("spec") do |t|
-  t.spec_files = %w'spec/subset_sum_spec.rb'
-end
+begin
+  begin
+    raise LoadError if ENV['RSPEC1']
+    # RSpec 2
+    require "rspec/core/rake_task"
+    spec_class = RSpec::Core::RakeTask
+    spec_files_meth = :pattern=
+  rescue LoadError
+    # RSpec 1
+    require "spec/rake/spectask"
+    spec_class = Spec::Rake::SpecTask
+    spec_files_meth = :spec_files=
+  end
 
-task :build do
-  sh %{#{RUBY} extconf.rb}
-  sh %{make}
+  task :default => [:spec]
+  task :spec => [:build]
+  spec_class.new("spec") do |t|
+    t.send(spec_files_meth, %w'spec/subset_sum_spec.rb')
+  end
+rescue LoadError
+  task :default do
+    puts "Must install rspec to run the default task (which runs specs)"
+  end
 end
 
 RDOC_OPTS = ["--line-numbers", "--inline-source", '--main', 'README']
@@ -24,6 +37,11 @@ begin
   gem 'hanna-nouveau'
   RDOC_OPTS.concat(['-f', 'hanna'])
 rescue Gem::LoadError
+end
+
+task :build do
+  sh %{#{RUBY} extconf.rb}
+  sh %{make}
 end
 
 rdoc_task_class = begin

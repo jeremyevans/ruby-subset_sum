@@ -1,7 +1,21 @@
 #!/usr/bin/env spec
 require 'subset_sum'
 
-context "SubsetSum.subset_sum" do
+if defined?(RSpec)
+  require 'rspec/version'
+  if RSpec::Version::STRING >= '2.11.0'
+    RSpec.configure do |config|
+      config.expect_with :rspec do |c|
+        c.syntax = :should
+      end
+      config.mock_with :rspec do |c|
+        c.syntax = :should
+      end
+    end
+  end
+end
+
+describe "SubsetSum.subset_sum" do
   it "should raise TypeError unless the first argument is an array" do
     proc{SubsetSum.subset_sum(1, 1)}.should raise_error(TypeError)
     proc{SubsetSum.subset_sum(nil, 1)}.should raise_error(TypeError)
