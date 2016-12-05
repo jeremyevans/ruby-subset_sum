@@ -35,10 +35,9 @@ module SubsetSum
     
     # Use the C version if it exists and all values will be inside the machine
     # limits
-    return _subset_sum(values, want, max_seconds.to_i) if \
-      respond_to?(:_subset_sum, true) and want.is_a?(Fixnum) and \
-      sum(pos).is_a?(Fixnum) and sum(neg).is_a?(Fixnum) and \
-      max_seconds.to_i.is_a?(Fixnum)
+    if respond_to?(:_subset_sum, true) && _subset_sum_supported?(want, sp, sn, max_seconds.to_i)
+      return _subset_sum(values, want, max_seconds.to_i)
+    end
 
     # The pure ruby version 
     sums = {}

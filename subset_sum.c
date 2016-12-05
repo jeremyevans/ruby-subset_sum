@@ -339,9 +339,21 @@ static VALUE rbss_main(VALUE self, VALUE numbers, VALUE result, VALUE max_second
     return answer;
 }
 
+#ifndef RB_FIXNUM_P
+#define RB_FIXNUM_P(v) FIXNUM_P(v)
+#endif
+
+static VALUE rbss_supported(VALUE self, VALUE want, VALUE pos, VALUE neg, VALUE max_seconds) {
+    if (RB_FIXNUM_P(want) && RB_FIXNUM_P(pos) && RB_FIXNUM_P(neg) && RB_FIXNUM_P(max_seconds)) {
+        return Qtrue;
+    }
+    return Qfalse;
+}
+
 void Init_subset_sum() {
     VALUE SubsetSum;
     SubsetSum = rb_define_module("SubsetSum");
     rb_define_module_function(SubsetSum, "_subset_sum", rbss_main, 3);
+    rb_define_module_function(SubsetSum, "_subset_sum_supported?", rbss_supported, 4);
     eTimeoutError = rb_define_class_under(SubsetSum, "TimeoutError", rb_eStandardError);
 }
