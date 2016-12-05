@@ -13,8 +13,8 @@ describe "SubsetSum.subset_sum" do
   end
   
   it "should return nil if no subset sums to the given amount" do
-    SubsetSum.subset_sum([1,2,3], -1).must_equal nil
-    SubsetSum.subset_sum([1,2,3], 7).must_equal nil
+    SubsetSum.subset_sum([1,2,3], -1).must_be_nil
+    SubsetSum.subset_sum([1,2,3], 7).must_be_nil
   end
   
   it "should return a subset of the given array summing to the given amount" do
