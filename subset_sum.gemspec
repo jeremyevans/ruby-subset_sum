@@ -10,4 +10,5 @@ spec = Gem::Specification.new do |s|
   s.require_paths = ["."]
   s.extensions << 'extconf.rb'
   s.test_files = %w"spec/subset_sum_spec.rb"
+  s.add_development_dependency "minitest-global_expectations"
 end

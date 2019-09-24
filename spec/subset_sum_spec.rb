@@ -1,6 +1,6 @@
 require 'subset_sum'
 ENV['MT_NO_PLUGINS'] = '1' # Work around stupid autoloading of plugins
-require 'minitest/autorun'
+require 'minitest/global_expectations/autorun'
 
 describe "SubsetSum.subset_sum" do
   it "should raise TypeError unless the first argument is an array" do
