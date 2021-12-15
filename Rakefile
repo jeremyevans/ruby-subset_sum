@@ -8,7 +8,7 @@ ENV['RUBYLIB'] = ".#{File::PATH_SEPARATOR}#{ENV['RUBYLIB']}"
 
 task :default => [:spec]
 task :spec => [:build] do
-  sh "#{FileUtils::RUBY} -I . spec/subset_sum_spec.rb"
+  sh "#{FileUtils::RUBY} #{"-w" if RUBY_VERSION >= '3'} -I . spec/subset_sum_spec.rb"
 end
 
 RDOC_OPTS = ["--line-numbers", "--inline-source", '--main', 'README']
