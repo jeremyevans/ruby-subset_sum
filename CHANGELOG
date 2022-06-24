@@ -1,0 +1,11 @@
+= 1.0.2 (2016-12-05)
+
+* Work on Ruby 2.4+ (jeremyevans)
+
+= 1.0.1 (2010-11-20)
+
+* Work on Ruby 1.9+ (jeremyevans)
+
+= 1.0.0 (2008-10-08)
+
+* Initial release
