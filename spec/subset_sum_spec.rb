@@ -1,3 +1,15 @@
+if command = ENV.delete('COVERAGE')
+  require 'simplecov'
+
+  SimpleCov.start do
+    enable_coverage :branch
+    command_name command
+    add_filter "/spec/"
+    add_group('Missing'){|src| src.covered_percent < 100}
+    add_group('Covered'){|src| src.covered_percent == 100}
+  end
+end
+
 require 'subset_sum'
 ENV['MT_NO_PLUGINS'] = '1' # Work around stupid autoloading of plugins
 require 'minitest/global_expectations/autorun'
@@ -18,6 +30,17 @@ describe "SubsetSum.subset_sum" do
     SubsetSum.subset_sum([1,2,3], 7).must_be_nil
   end
   
+  it "should handle case where subset sum is computed within Timeout" do
+    SubsetSum.subset_sum([1,2,3], -1, 1).must_be_nil
+    SubsetSum.subset_sum([1,2,3], 7, 1).must_be_nil
+    SubsetSum.subset_sum([1,2,3], 0, 1).must_equal []
+    SubsetSum.subset_sum([1,2,3], 1, 1).must_equal [1]
+    SubsetSum.subset_sum([1,2,3], 2, 1).must_equal [2]
+    [[1,2], [3]].must_include(SubsetSum.subset_sum([1,2,3], 3, 1))
+    SubsetSum.subset_sum([1,2,3], 4, 1).must_equal [1,3]
+    SubsetSum.subset_sum([1,2,3], 5, 1).must_equal [2,3]
+  end
+  
   it "should return a subset of the given array summing to the given amount" do
     SubsetSum.subset_sum([1,2,3], 0).must_equal []
     SubsetSum.subset_sum([1,2,3], 1).must_equal [1]
@@ -26,6 +49,14 @@ describe "SubsetSum.subset_sum" do
     SubsetSum.subset_sum([1,2,3], 4).must_equal [1,3]
     SubsetSum.subset_sum([1,2,3], 5).must_equal [2,3]
     SubsetSum.subset_sum([1,2,3], 6).must_equal [1,2,3]
+    
+    SubsetSum.subset_sum([-1,-2,-3], 0).must_equal []
+    SubsetSum.subset_sum([-1,-2,-3], -1).must_equal [-1]
+    SubsetSum.subset_sum([-1,-2,-3], -2).must_equal [-2]
+    [[-1,-2], [-3]].must_include(SubsetSum.subset_sum([-1,-2,-3], -3))
+    SubsetSum.subset_sum([-1,-2,-3], -4).must_equal [-1,-3]
+    SubsetSum.subset_sum([-1,-2,-3], -5).must_equal [-2,-3]
+    SubsetSum.subset_sum([-1,-2,-3], -6).must_equal [-1,-2,-3]
     
     a = [355104, 476077, 476303, 224658, -17532, -183480, -286788, 238271, 231845, -227454, 226199, 105438, 316870, 353652, 173563, 244958, 367896, 105046, 495797, 447209, 397810, -394348, 242527, 17532, -57224, -38084, 82375, 445376, -297793, 368660, -65413, 96325, -472195, -23826, -113982, -355574, 331821]
     b = [-17532, 226199, 105438, 353652, 173563, 244958, 397810, 242527, 17532, -38084, 82375, 445376, 368660, -65413, -23826, 331821]
@@ -41,8 +72,12 @@ describe "SubsetSum.subset_sum" do
   end
   
   it "should not use the C version if the integers are Bignums" do
-    SubsetSum.stub :_subset_sum, proc{raise} do
-      SubsetSum.subset_sum([2**100, 1, 2,], 1+2**100).must_equal [2**100, 1]
+    if SubsetSum.respond_to?(:_subset_sum, true)
+      SubsetSum.stub :_subset_sum, proc{raise} do
+        SubsetSum.subset_sum([2**100, 1, 2,], 1+2**100).must_equal [2**100, 1]
+      end
+    else
+        SubsetSum.subset_sum([2**100, 1, 2,], 1+2**100).must_equal [2**100, 1]
     end
   end
 end

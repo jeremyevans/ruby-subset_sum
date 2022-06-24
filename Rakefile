@@ -6,7 +6,17 @@ ENV['RUBYLIB'] = ".#{File::PATH_SEPARATOR}#{ENV['RUBYLIB']}"
 
 task :default => [:spec]
 task :spec => [:build] do
-  sh "#{FileUtils::RUBY} #{"-w" if RUBY_VERSION >= '3'} -I . spec/subset_sum_spec.rb"
+  sh "#{FileUtils::RUBY} #{"-w" if RUBY_VERSION >= '3'} spec/subset_sum_spec.rb"
+  File.delete('subset_sum.so')
+  sh "#{FileUtils::RUBY} #{"-w" if RUBY_VERSION >= '3'} spec/subset_sum_spec.rb"
+end
+
+task :spec_cov => [:build] do
+  ENV['COVERAGE'] = 'c'
+  sh "#{FileUtils::RUBY} spec/subset_sum_spec.rb"
+  File.delete('subset_sum.so')
+  ENV['COVERAGE'] = 'ruby'
+  sh "#{FileUtils::RUBY} spec/subset_sum_spec.rb"
 end
 
 task :build =>[:clean] do

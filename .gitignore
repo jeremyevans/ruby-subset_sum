@@ -1,6 +1,7 @@
-Makefile
-rdoc
-subset_sum.o
-subset_sum.so
-*.gem
-extconf.h
+/Makefile
+/rdoc
+/subset_sum.o
+/subset_sum.so
+/*.gem
+/extconf.h
+/coverage
