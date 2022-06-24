@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
-require 'rubygems'
-require 'subset_sum'
+require_relative '../subset_sum'
 require 'benchmark'
 
 def run_benches(a, b)

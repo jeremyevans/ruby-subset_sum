@@ -71,7 +71,7 @@ module SubsetSum
 end
 
 begin
-  require 'subset_sum.so'
+  require_relative 'subset_sum.so'
   SubsetSum.send(:private_class_method, :_subset_sum)
 rescue LoadError
 end
