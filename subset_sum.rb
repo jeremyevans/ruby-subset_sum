@@ -14,13 +14,15 @@
 # the set, as well as the wanted number, must all be Fixnums.  Additionally,
 # max_seconds should be nil or a Fixnum.
 module SubsetSum
+  extend self
+
   # Exception raised when timeout expires
   class TimeoutError < StandardError
   end
   
   # Return first subset of values that sum to want, using the meet in the
   # middle algorithm (O(n * 2^(n/2)).
-  def self.subset_sum(values, want, max_seconds=nil)
+  def subset_sum(values, want, max_seconds=nil)
     raise(TypeError, "values must be an array of Integers") unless values.is_a?(Array)
     raise(TypeError, "want must be an Integer") unless want.is_a?(Integer)
     
@@ -44,11 +46,11 @@ module SubsetSum
     start_time = Time.now if max_seconds
     l = values.length/2
     subsets(values[0...l]) do |subset|
-      raise(TimeoutError, "timeout expired") if max_seconds and Time.now - start_time > max_seconds
+      _check_timeout(start_time, max_seconds)
       sums[sum(subset)] = subset
     end
     subsets(values[l..-1]) do |subset|
-      raise(TimeoutError, "timeout expired") if max_seconds and Time.now - start_time > max_seconds
+      _check_timeout(start_time, max_seconds)
       if subset2 = sums[want - sum(subset)]
         return subset2 + subset
       end
@@ -56,22 +58,26 @@ module SubsetSum
     nil
   end
 
+  private
+
+  # Check time elapsed since start_time does not exceed max_seconds
+  def _check_timeout(start_time, max_seconds)
+    raise(TimeoutError, "timeout expired") if max_seconds and Time.now - start_time > max_seconds
+  end
+
   # Yield all subsets of the array to the block.
-  def self.subsets(array, skip = 0, &block)
+  def subsets(array, skip = 0, &block)
     yield(array)
     (array.length-1).downto(skip){|i| subsets(array[0...i] + array[i+1..-1], i, &block)}
   end
   
   # Return the sum of the values.
-  def self.sum(values)
+  def sum(values)
     values.inject(0){|x,y| x+=y}
   end
-  
-  private_class_method :subsets, :sum
 end
 
 begin
   require_relative 'subset_sum.so'
-  SubsetSum.send(:private_class_method, :_subset_sum)
 rescue LoadError
 end

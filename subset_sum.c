@@ -353,7 +353,7 @@ static VALUE rbss_supported(VALUE self, VALUE want, VALUE pos, VALUE neg, VALUE 
 void Init_subset_sum() {
     VALUE SubsetSum;
     SubsetSum = rb_define_module("SubsetSum");
-    rb_define_module_function(SubsetSum, "_subset_sum", rbss_main, 3);
-    rb_define_module_function(SubsetSum, "_subset_sum_supported?", rbss_supported, 4);
+    rb_define_private_method(SubsetSum, "_subset_sum", rbss_main, 3);
+    rb_define_private_method(SubsetSum, "_subset_sum_supported?", rbss_supported, 4);
     eTimeoutError = rb_define_class_under(SubsetSum, "TimeoutError", rb_eStandardError);
 }
