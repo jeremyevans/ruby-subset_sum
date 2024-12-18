@@ -6,9 +6,9 @@ ENV['RUBYLIB'] = ".#{File::PATH_SEPARATOR}#{ENV['RUBYLIB']}"
 
 task :default => [:spec]
 task :spec => [:build] do
-  sh "#{FileUtils::RUBY} #{"-w" if RUBY_VERSION >= '3'} spec/subset_sum_spec.rb"
+  sh "#{FileUtils::RUBY} #{"-w" if RUBY_VERSION >= '3'} #{'-W:strict_unused_block' if RUBY_VERSION >= '3.4'} spec/subset_sum_spec.rb"
   File.delete('subset_sum.so')
-  sh "#{FileUtils::RUBY} #{"-w" if RUBY_VERSION >= '3'} spec/subset_sum_spec.rb"
+  sh "#{FileUtils::RUBY} #{"-w" if RUBY_VERSION >= '3'} #{'-W:strict_unused_block' if RUBY_VERSION >= '3.4'} spec/subset_sum_spec.rb"
 end
 
 task :spec_cov => [:build] do
