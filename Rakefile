@@ -1,5 +1,4 @@
 require 'rake/clean'
-require "rdoc/task"
 
 CLEAN.include %w"rdoc Makefile subset_sum.o subset_sum.so subset_sum-*.gem"
 ENV['RUBYLIB'] = ".#{File::PATH_SEPARATOR}#{ENV['RUBYLIB']}"
@@ -24,17 +23,25 @@ task :build =>[:clean] do
   sh %{make}
 end
 
-RDoc::Task.new do |rdoc|
-  rdoc.rdoc_dir = "rdoc"
-  rdoc.options += ["--quiet", "--line-numbers", "--inline-source", '--title', 'subset_sum: Simple Subset Sum Solver with C and pure ruby versions', '--main', 'subset_sum.rb']
+desc "Generate rdoc"
+task :rdoc do
+  rdoc_dir = "rdoc"
+  rdoc_opts = ["--line-numbers", "--inline-source", '--title', 'subset_sum: Simple Subset Sum Solver with C and pure ruby versions']
 
   begin
     gem 'hanna'
-    rdoc.options += ['-f', 'hanna']
+    rdoc_opts.concat(['-f', 'hanna'])
   rescue Gem::LoadError
   end
 
-  rdoc.rdoc_files.add %w"README CHANGELOG LICENSE lib/**/*.rb"
+  rdoc_opts.concat(['--main', 'subset_sum.rb', "-o", rdoc_dir] +
+    %w"README CHANGELOG LICENSE subset_sum.rb"
+  )
+
+  FileUtils.rm_rf(rdoc_dir)
+
+  require "rdoc"
+  RDoc::RDoc.new.document(rdoc_opts)
 end
 
 desc "Package subset_sum"
