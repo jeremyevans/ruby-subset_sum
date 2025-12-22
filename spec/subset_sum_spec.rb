@@ -73,8 +73,19 @@ describe "SubsetSum.subset_sum" do
   
   it "should not use the C version if the integers are Bignums" do
     if SubsetSum.respond_to?(:_subset_sum, true)
-      SubsetSum.stub :_subset_sum, proc{raise} do
+      begin
+        class << SubsetSum
+          alias _subset_sum _subset_sum
+          alias _subset_sum_orig _subset_sum
+          def _subset_sum; raise end
+          alias _subset_sum _subset_sum
+        end
         SubsetSum.subset_sum([2**100, 1, 2,], 1+2**100).must_equal [2**100, 1]
+      ensure
+        class << SubsetSum
+          alias _subset_sum _subset_sum_orig
+          remove_method :_subset_sum_orig
+        end
       end
     else
         SubsetSum.subset_sum([2**100, 1, 2,], 1+2**100).must_equal [2**100, 1]
