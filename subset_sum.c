@@ -350,7 +350,7 @@ static VALUE rbss_supported(VALUE self, VALUE want, VALUE pos, VALUE neg, VALUE 
     return Qfalse;
 }
 
-void Init_subset_sum() {
+void Init_subset_sum(void) {
     VALUE SubsetSum;
     SubsetSum = rb_define_module("SubsetSum");
     rb_define_private_method(SubsetSum, "_subset_sum", rbss_main, 3);
