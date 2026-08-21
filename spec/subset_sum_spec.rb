@@ -2,11 +2,12 @@ if command = ENV.delete('COVERAGE')
   require 'simplecov'
 
   SimpleCov.start do
-    enable_coverage :branch
     command_name command
-    add_filter{|f| f.filename.match(%r{\A#{Regexp.escape(File.expand_path(File.dirname(__FILE__)))}/})}
-    add_group('Missing'){|src| src.covered_percent < 100}
-    add_group('Covered'){|src| src.covered_percent == 100}
+    coverage :line
+    coverage :branch
+    cover "subset_sum.rb"
+    group('Missing'){|src| src.covered_percent < 100}
+    merge_timeout 600
   end
 end
 
